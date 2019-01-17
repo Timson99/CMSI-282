@@ -64,7 +64,7 @@ public class Pathfinder {
         ArrayList<String> solution = new ArrayList<String>();
         SearchTreeNode currentNode = goal;
         while(!currentNode.state.equals(problem.INITIAL_STATE)) {
-            solution.add(0,currentNode.action);
+            solution.add(0, currentNode.action);
             currentNode = currentNode.parent;
         }
         return solution;
