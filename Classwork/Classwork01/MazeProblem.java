@@ -16,7 +16,7 @@ public class MazeProblem {
     private String[] maze;
     private int rows, cols;
     public final MazeState INITIAL_STATE, GOAL_STATE;
-    public static final Map<String, MazeState> TRANS_MAP = createTransitions();
+    private static final Map<String, MazeState> TRANS_MAP = createTransitions();
     
     /**
      * @return Creates the transition map that maps String actions to 
@@ -160,7 +160,4 @@ public class MazeProblem {
         result[1] = cost;
         return result;
     }
-    //javac -cp junit-4.13-beta-1.jar;. PathfinderTests.java
-    //java -cp junit-4.13-beta-1.jar;hamcrest-core-1.3.jar;. org.junit.runner.JUnitCore PathfinderTests
-    
 }
