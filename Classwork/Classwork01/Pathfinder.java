@@ -1,4 +1,4 @@
-package pathfinder.uninformed;
+//package pathfinder.uninformed;
 
 import java.util.ArrayList;
 import java.util.*;
@@ -63,12 +63,12 @@ public class Pathfinder {
     public static ArrayList<String> getSolution(SearchTreeNode goal, MazeProblem problem) {
         ArrayList<String> solution = new ArrayList<String>();
         SearchTreeNode currentNode = goal;
-        while(!problem.isGoal(currentNode.state)) {
-            solution.add(goal.action);
+        while(!currentNode.state.equals(problem.INITIAL_STATE)) {
+            solution.add(0,currentNode.action);
+            currentNode = currentNode.parent;
         }
         return solution;
     }
-    
 }
 
 /**
