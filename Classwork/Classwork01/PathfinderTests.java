@@ -1,23 +1,23 @@
-//package pathfinder.informed;
+//package pathfinder.ininformed;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
 import java.util.ArrayList;
+
 
 /**
  * Unit tests for Maze Pathfinder. Tests include completeness and
  * optimality.
  */
 public class PathfinderTests {
-    
+
     @Test
     public void testPathfinder_t0() {
         String[] maze = {
-            "XXXXXXX",
-            "XI...KX",
-            "X.....X",
-            "X.X.XGX",
-            "XXXXXXX"
+            "XXXX",
+            "X.IX",
+            "XG.X",
+            "XXXX"
         };
         MazeProblem prob = new MazeProblem(maze);
         ArrayList<String> solution = Pathfinder.solve(prob);
@@ -27,56 +27,63 @@ public class PathfinderTests {
         // - cost = numerical cost of proposed solution
         int[] result = prob.testSolution(solution);
         assertEquals(1, result[0]); // Test that result is a solution
-        assertEquals(6, result[1]); // Ensure that the solution is optimal
+        assertEquals(2, result[1]); // Ensure that the solution is optimal
     }
     
     @Test
     public void testPathfinder_t1() {
         String[] maze = {
             "XXXXXXX",
-            "XI....X",
-            "X.MMM.X",
-            "X.XKXGX",
+            "X.....X",
+            "XIX.X.X",
+            "XX.X..X",
+            "XG....X",
             "XXXXXXX"
         };
         MazeProblem prob = new MazeProblem(maze);
         ArrayList<String> solution = Pathfinder.solve(prob);
         
         int[] result = prob.testSolution(solution);
-        assertEquals(1, result[0]);  // Test that result is a solution
-        assertEquals(14, result[1]); // Ensure that the solution is optimal
+        assertEquals(1,  result[0]); // Test that result is a solution
+        assertEquals(12, result[1]); // Ensure that the solution is optimal
     }
     
     @Test
     public void testPathfinder_t2() {
         String[] maze = {
-            "XXXXXXX",
-            "XI.G..X",
-            "X.MMMGX",
-            "X.XKX.X",
-            "XXXXXXX"
+            "XXXXXIX",
+            "X.....X",
+            "XX.XXXX",
+            "XX....X",
+            "X.....X",
+            "XXXXXGX"
         };
         MazeProblem prob = new MazeProblem(maze);
         ArrayList<String> solution = Pathfinder.solve(prob);
         
         int[] result = prob.testSolution(solution);
-        assertEquals(1, result[0]);  // Test that result is a solution
-        assertEquals(10, result[1]); // Ensure that the solution is optimal
+        assertEquals(1,  result[0]); // Test that result is a solution
+        assertEquals(11, result[1]); // Ensure that the solution is optimal
     }
     
     @Test
     public void testPathfinder_t3() {
         String[] maze = {
-            "XXXXXXX",
-            "XI.G..X",
-            "X.MXMGX",
-            "X.XKX.X",
-            "XXXXXXX"
+            "XXXXXXXXXXXXXXXXXXXX",
+            "X.X................X",
+            "X...X.XXXXXX.......X",
+            "X.....X....X.......X",
+            "X.....XGXIXX.......X",
+            "X..XXXX.XXXXXX.....X",
+            "X.......X..........X",
+            "XXXXXXXXXXXXXXXXXXXX"
         };
         MazeProblem prob = new MazeProblem(maze);
         ArrayList<String> solution = Pathfinder.solve(prob);
         
-        assertNull(solution); // Ensure that Pathfinder knows when there's no solution
+        int[] result = prob.testSolution(solution);
+        assertEquals(1,  result[0]); // Test that result is a solution
+        assertEquals(4, result[1]); // Ensure that the solution is optimal
     }
-    
+
 }
