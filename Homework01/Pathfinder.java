@@ -10,7 +10,7 @@ import java.util.*;
  */
 public class Pathfinder {
     
-    private HashSet<SearchTreeNode> graveyard = new HashSet<>();
+    private static HashSet<MazeState> graveyard = new HashSet<>();
     
     
     /**
@@ -35,20 +35,20 @@ public class Pathfinder {
             }
         });
         
-        System.out.println("T: " + manhattanH(problem.GOAL_STATE, new MazeState(1,1)));
+        
         // TODO: Add new SearchTreeNode representing the problem's initial state to the
         // frontier. Since this is the initial state, the node's action and parent will
         // be null
         
-        currentFrontier.add(new SearchTreeNode(problem.INITIAL_STATE, null, null,1,1));
+        currentFrontier.add(new SearchTreeNode(problem.INITIAL_STATE, null, null, 0, manhattanH(problem.GOAL_STATE, problem.INITIAL_STATE)));
         
         // TODO: Loop: as long as the frontier is not empty...
         
         while(currentFrontier.size() > 0) {
-        
+            
             // TODO: Get the next node to expand by the ordering of breadth-first search
             SearchTreeNode temp = currentFrontier.remove();
-            
+            graveyard.add(temp.state);
             // TODO: If that node's state is the goal (see problem's isGoal method),
             // you're done! Return the solution
             // [Hint] Use a helper method to collect the solution from the current node!
@@ -65,9 +65,15 @@ public class Pathfinder {
         
                 // TODO: ...add a new SearchTreeNode to the frontier with the appropriate
                 // action, state, and parent
-                currentFrontier.add(new SearchTreeNode(action.getValue(),action.getKey(),temp,1,1));
+                
+                SearchTreeNode generatedChild = new SearchTreeNode
+                    (action.getValue(),action.getKey(),temp, temp.history , manhattanH(problem.GOAL_STATE, action.getValue()));
+                    
+                if(!graveyard.contains(generatedChild.state)) {
+                    currentFrontier.add(generatedChild);
+                }
             }
-            //graveyard.add( expandedNode );
+            
         }
         // Should never get here, but just return null to make the compiler happy
         return null;
@@ -89,6 +95,12 @@ public class Pathfinder {
             solution.add(0, currentNode.action);
             currentNode = currentNode.parent;
         }
+        //DEBUG
+        System.out.println();
+        for(int i = 0; i < solution.size(); i++) {
+                System.out.print(" " + solution.get(i));
+        }
+        //DEBUG
         return solution;
     }
 }
