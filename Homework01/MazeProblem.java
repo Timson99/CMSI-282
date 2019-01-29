@@ -87,9 +87,6 @@ public class MazeProblem {
         KEY_STATE = foundKey;
         INITIAL_STATE = foundInitial;
         GOAL_STATE = foundGoal;
-        
-        System.out.println("INITIAL: " + INITIAL_STATE.row + " " + INITIAL_STATE.col + "\n");
-        System.out.println("KEY: " + KEY_STATE.row + " " + KEY_STATE.col + "\n");
     }
     
     
