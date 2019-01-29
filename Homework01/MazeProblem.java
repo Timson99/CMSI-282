@@ -15,7 +15,8 @@ public class MazeProblem {
     // -----------------------------------------------------------------------------
     private String[] maze;
     private int rows, cols;
-    public final MazeState INITIAL_STATE, GOAL_STATE;
+    public final MazeState INITIAL_STATE;
+    public final ArrayList<MazeState> GOAL_STATE;
     private static final Map<String, MazeState> TRANS_MAP = createTransitions();
     
     /**
@@ -59,7 +60,8 @@ public class MazeProblem {
         this.maze = maze;
         this.rows = maze.length;
         this.cols = (rows == 0) ? 0 : maze[0].length();
-        MazeState foundInitial = null, foundGoal = null;
+        MazeState foundInitial = null;
+        ArrayList<MazeState> foundGoal = new ArrayList<MazeState>();
         
         // Find the initial and goal state in the given maze, and then
         // store in fields once found
@@ -69,7 +71,7 @@ public class MazeProblem {
                 case 'I':
                     foundInitial = new MazeState(col, row); break;
                 case 'G':
-                    foundGoal = new MazeState(col, row); break;
+                    foundGoal.add(new MazeState(col, row)); break;
                 case '.':
                 case 'K':
                 case 'M':
@@ -95,7 +97,12 @@ public class MazeProblem {
      * @return Boolean of whether or not the given state is a Goal.
      */
     public boolean isGoal (MazeState state) {
-        return state.equals(GOAL_STATE);
+        for(int i = 0; i < GOAL_STATE.size(); i++) {
+            if(state.equals(GOAL_STATE.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**

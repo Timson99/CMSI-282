@@ -3,10 +3,15 @@
 import java.util.ArrayList;
 import java.util.*;
 
+
+
 /**
  * Maze Pathfinding algorithm that implements a basic, uninformed, breadth-first tree search.
  */
 public class Pathfinder {
+    
+    private HashSet<SearchTreeNode> graveyard = new HashSet<>();
+    
     
     /**
      * Given a MazeProblem, which specifies the actions and transitions available in the
@@ -30,6 +35,7 @@ public class Pathfinder {
             }
         });
         
+        System.out.println("T: " + manhattanH(problem.GOAL_STATE, new MazeState(1,1)));
         // TODO: Add new SearchTreeNode representing the problem's initial state to the
         // frontier. Since this is the initial state, the node's action and parent will
         // be null
@@ -61,15 +67,19 @@ public class Pathfinder {
                 // action, state, and parent
                 currentFrontier.add(new SearchTreeNode(action.getValue(),action.getKey(),temp,1,1));
             }
+            //graveyard.add( expandedNode );
         }
         // Should never get here, but just return null to make the compiler happy
         return null;
         
     }
     
-    public static void manhattanH() {
-        
-        
+    public static int manhattanH(ArrayList<MazeState> goalStates, MazeState state) { 
+        PriorityQueue<Integer> sorter = new PriorityQueue<Integer>();
+        for(int i = 0; i < goalStates.size(); i++) {
+            sorter.add(Math.abs(goalStates.get(i).row - state.row) + Math.abs(goalStates.get(i).col - state.col));
+        }
+        return sorter.peek(); 
     }
     
     public static ArrayList<String> getSolution(SearchTreeNode goal, MazeProblem problem) {
