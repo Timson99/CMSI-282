@@ -1,4 +1,4 @@
-//package pathfinder.uninformed;
+//package pathfinder.informed;
 
 import java.util.Map;
 import java.util.ArrayList;
@@ -15,7 +15,8 @@ public class MazeProblem {
     // -----------------------------------------------------------------------------
     private String[] maze;
     private int rows, cols;
-    public final MazeState INITIAL_STATE, GOAL_STATE;
+    public final MazeState INITIAL_STATE, KEY_STATE;
+    public final ArrayList<MazeState> GOAL_STATE;
     private static final Map<String, MazeState> TRANS_MAP = createTransitions();
     
     /**
@@ -59,7 +60,9 @@ public class MazeProblem {
         this.maze = maze;
         this.rows = maze.length;
         this.cols = (rows == 0) ? 0 : maze[0].length();
-        MazeState foundInitial = null, foundGoal = null;
+        MazeState foundInitial = null;
+        MazeState foundKey = null;
+        ArrayList<MazeState> foundGoal = new ArrayList<MazeState>();
         
         // Find the initial and goal state in the given maze, and then
         // store in fields once found
@@ -69,8 +72,11 @@ public class MazeProblem {
                 case 'I':
                     foundInitial = new MazeState(col, row); break;
                 case 'G':
-                    foundGoal = new MazeState(col, row); break;
+                    foundGoal.add(new MazeState(col, row)); break;
+                case 'K':
+                    foundKey = new MazeState(col, row); break;
                 case '.':
+                case 'M':
                 case 'X':
                     break;
                 default:
@@ -78,8 +84,12 @@ public class MazeProblem {
                 }
             }
         }
+        KEY_STATE = foundKey;
         INITIAL_STATE = foundInitial;
         GOAL_STATE = foundGoal;
+        
+        System.out.println("INITIAL: " + INITIAL_STATE.row + " " + INITIAL_STATE.col + "\n");
+        System.out.println("KEY: " + KEY_STATE.row + " " + KEY_STATE.col + "\n");
     }
     
     
@@ -93,7 +103,12 @@ public class MazeProblem {
      * @return Boolean of whether or not the given state is a Goal.
      */
     public boolean isGoal (MazeState state) {
-        return state.equals(GOAL_STATE);
+        for(int i = 0; i < GOAL_STATE.size(); i++) {
+            if(state.equals(GOAL_STATE.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -129,21 +144,33 @@ public class MazeProblem {
         }
         return result;
     }
+       /**
+          returns the cost associated with moving into that state in the MazeProblem's maze.
+            */
+    public int getCost(MazeState state) {
+        if(maze[state.row].charAt(state.col) == 'M') {
+            return 3;
+        }
+        else {
+            return 1;
+        }
+    }
     
     /**
-     * Given a possibleSoln, tests to ensure that it is indeed a solution to this MazeProblem,
-     * as well as returning the cost.
-     * 
-     * @param possibleSoln A possible solution to test, which is a list of actions of the format:
-     * ["U", "D", "D", "L", ...]
-     * @return A 2-element array of ints of the format [isSoln, cost] where:<br>
-     * isSoln will be 0 if it is not a solution, and 1 if it is<br>
-     * cost will be an integer denoting the cost of the given solution to test optimality
-     */
+ * Given a possibleSoln, tests to ensure that it is indeed a solution to this MazeProblem,
+ * as well as returning the cost.
+ * 
+ * @param possibleSoln A possible solution to test, which is a list of actions of the format:
+ * ["U", "D", "D", "L", ...]
+ * @return A 2-element array of ints of the format [isSoln, cost] where:
+ * isSoln will be 0 if it is not a solution, and 1 if it is
+ * cost will be an integer denoting the cost of the given solution to test optimality
+ */
     public int[] testSolution (ArrayList<String> possibleSoln) {
         // Update the "moving state" that begins at the start and is modified by the transitions
         MazeState movingState = new MazeState(INITIAL_STATE.col, INITIAL_STATE.row);
         int cost = 0;
+        boolean hasKey = false;
         int[] result = {0, -1};
         
         // For each action, modify the movingState, and then check that we have landed in
@@ -151,12 +178,15 @@ public class MazeProblem {
         for (String action : possibleSoln) {
             MazeState actionMod = TRANS_MAP.get(action);
             movingState.add(actionMod);
-            if (maze[movingState.row].charAt(movingState.col) == 'X') {
+            switch (maze[movingState.row].charAt(movingState.col)) {
+            case 'X':
                 return result;
+            case 'K':
+                hasKey = true; break;
             }
-            cost++;
+            cost += getCost(movingState);
         }
-        result[0] = isGoal(movingState) ? 1 : 0;
+        result[0] = isGoal(movingState) && hasKey ? 1 : 0;
         result[1] = cost;
         return result;
     }
