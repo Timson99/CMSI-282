@@ -23,8 +23,7 @@ public class Pathfinder {
      * the goal state, of the format: ["R", "R", "L", ...]
      */
     public static ArrayList<String> solve (MazeProblem problem) {
-        // TODO: Initialize frontier -- what data structure should you use here for
-        // breadth-first search? Recall: The frontier holds SearchTreeNodes!
+        
         HashSet<MazeState> graveyard = new HashSet<>();
         PriorityQueue<SearchTreeNode> currentFrontier = new PriorityQueue<SearchTreeNode>(50, new Comparator<SearchTreeNode>() 
         {
@@ -35,27 +34,26 @@ public class Pathfinder {
             }
         });
         
-        
-        // TODO: Add new SearchTreeNode representing the problem's initial state to the
-        // frontier. Since this is the initial state, the node's action and parent will
-        // be null
         boolean keyObtained = false;
-        
         currentFrontier.add(new SearchTreeNode(problem.INITIAL_STATE, null, null, 0, manhattanH(keyObtained, problem.GOAL_STATE, problem.KEY_STATE, problem.INITIAL_STATE)));
         graveyard.add(problem.INITIAL_STATE);
         
         
-        // TODO: Loop: as long as the frontier is not empty...
         while(currentFrontier.size() > 0) {
+            
+            //DEBUG
             PriorityQueue<SearchTreeNode> copy = new PriorityQueue<>(currentFrontier);
             System.out.println("\nFront of Queue:  ");
             while(copy.peek() != null) {
                 SearchTreeNode value = copy.remove();
                 System.out.print( "(" + value.aStarCost + ", (" + value.state.row + "," + value.state.col + ")) ");
             }
-             System.out.println();
+             System.out.println(); 
+             //DEBUG
+             
             
-            // TODO: Get the next node to expand by the ordering of breadth-first search
+           
+            
             SearchTreeNode temp = currentFrontier.remove();
             
             if(!keyObtained)  {
@@ -68,33 +66,20 @@ public class Pathfinder {
                 }
             }
             
-           
-            
-            
-            
-            // TODO: If that node's state is the goal (see problem's isGoal method),
-            // you're done! Return the solution
-            // [Hint] Use a helper method to collect the solution from the current node!
             if(problem.isGoal(temp.state) && keyObtained) {
                 return getSolution(temp, problem);
             }
-            // TODO: Otherwise, must generate children to keep searching. So, use the
-            // problem's getTransitions method from the currently expanded node's state...
+            
             Map<String,MazeState> transitions = problem.getTransitions(temp.state);
-            // TODO: ...and *for each* of those transition states...
-            // [Hint] Look up how to iterate through <key, value> pairs in a Map -- an
-            // example of this is already done in the MazeProblem's getTransitions method
             System.out.println("\n   Expanding (" + temp.state.row + "," + temp.state.col +")\n");
             for(Map.Entry<String, MazeState> action : transitions.entrySet()) {
-        
-                // TODO: ...add a new SearchTreeNode to the frontier with the appropriate
-                // action, state, and parent
-                
+       
                 SearchTreeNode generatedChild = new SearchTreeNode
                     (action.getValue(),action.getKey(),temp, temp.history + problem.getCost(action.getValue()) , manhattanH(keyObtained, problem.GOAL_STATE, problem.KEY_STATE, action.getValue()));
                     
-                System.out.println("Test " + action.getKey() + " " + action.getValue().row + " " + action.getValue().col + " " + generatedChild.history + " " + generatedChild.aStarCost + " ");
+                
                 if(!graveyard.contains(generatedChild.state)) {
+                    System.out.println("Test " + action.getKey() + " " + action.getValue().row + " " + action.getValue().col + " " + generatedChild.history + " " + generatedChild.aStarCost + " ");
                     currentFrontier.add(generatedChild);
                     graveyard.add(generatedChild.state);
                 }
@@ -133,7 +118,7 @@ public class Pathfinder {
     public static ArrayList<String> getSolution(SearchTreeNode goal, MazeProblem problem) {
         ArrayList<String> solution = new ArrayList<String>();
         SearchTreeNode currentNode = goal;
-        while(!currentNode.state.equals(problem.INITIAL_STATE)) {
+        while(currentNode.parent != null) {
             solution.add(0, currentNode.action);
             currentNode = currentNode.parent;
         }
