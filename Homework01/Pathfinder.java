@@ -55,14 +55,13 @@ public class Pathfinder {
            
             
             SearchTreeNode temp = currentFrontier.remove();
+            graveyard.add(temp.state);
             
             if(!keyObtained)  {
                 if(canCollectKey(temp.state, problem.KEY_STATE)) {
                     graveyard.clear();
                     currentFrontier.clear();
                     keyObtained = true;
-                    temp.aStarCost = goalManhattanH(problem.GOAL_STATE, temp.state);
-                    temp.history = 0; 
                 }
             }
             
@@ -81,7 +80,7 @@ public class Pathfinder {
                 if(!graveyard.contains(generatedChild.state)) {
                     System.out.println("Test " + action.getKey() + " " + action.getValue().row + " " + action.getValue().col + " " + generatedChild.history + " " + generatedChild.aStarCost + " ");
                     currentFrontier.add(generatedChild);
-                    graveyard.add(generatedChild.state);
+                    //graveyard.add(generatedChild.state);
                 }
             }
             

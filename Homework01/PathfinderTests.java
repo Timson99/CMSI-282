@@ -84,9 +84,57 @@ public class PathfinderTests {
         String[] maze = {
             "XXXXXXX",
             "XI...KX",
-            "X.....X",
-            "XG....X",
+            "XGMM..X",
+            "XGGM..X",
             "XXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+        
+        int[] result = prob.testSolution(solution);
+        assertEquals(1, result[0]);  // Test that result is a solution
+        assertEquals(9, result[1]); // Ensure that the solution is optimal
+    }
+    
+    @Test
+    public void testPathfinder_t5() {
+        String[] maze = {
+            "XXXXXXX",
+            "XGXMMKX",
+            "XGXMM.X",
+            "XGXIM.X",
+            "XXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+        assertNull(solution);
+    }
+    
+    @Test
+    public void testPathfinder_t6() {
+        String[] maze = {
+            "XXXXXXX",
+            "XGXMMKX",
+            "XGMMM.X",
+            "XG.IM.X",
+            "XXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+        
+        int[] result = prob.testSolution(solution);
+        assertEquals(1, result[0]);  // Test that result is a solution
+        assertEquals(14, result[1]); // Ensure that the solution is optimal
+    }
+    
+    @Test
+    public void testPathfinder_t7() {
+        String[] maze = {
+            "XXXXXXXXX",
+            "X.......X",
+            "XIMMKMMGX",
+            "X.......X",
+            "XXXXXXXXX"
         };
         MazeProblem prob = new MazeProblem(maze);
         ArrayList<String> solution = Pathfinder.solve(prob);
@@ -96,4 +144,75 @@ public class PathfinderTests {
         assertEquals(10, result[1]); // Ensure that the solution is optimal
     }
     
+    @Test
+    public void testPathfinder_t8() {
+        String[] maze = {
+            "XXXXXXXXX",
+            "X.....MMX",
+            "XIMMKMMGX",
+            "X......MX",
+            "XXXXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+        
+        int[] result = prob.testSolution(solution);
+        assertEquals(1, result[0]);  // Test that result is a solution
+        assertEquals(12, result[1]); // Ensure that the solution is optimal
+    }
+    
+    @Test
+    public void testPathfinder_t9() {
+        String[] maze = {
+            "XXXXXXXXXX",
+            "XG.MMIM.GX",
+            "XG..XXX.GX",
+            "XG.M.KM.GX",
+            "XGM..M.MGX",
+            "XXXXXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+        
+        int[] result = prob.testSolution(solution);
+        assertEquals(1, result[0]);  // Test that result is a solution
+        assertEquals(15, result[1]); // Ensure that the solution is optimal
+    }
+    
+    @Test
+    public void testPathfinder_t10() {
+        String[] maze = {
+            "XXXXXXXXXX",
+            "XG.MMIMMGX",
+            "XG..XXX.GX",
+            "XG.MMKMMGX",
+            "XGMM.M..GX",
+            "XXXXXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+        
+        int[] result = prob.testSolution(solution);
+        assertEquals(1, result[0]);  // Test that result is a solution
+        assertEquals(20, result[1]); // Ensure that the solution is optimal
+    }
+    
+    @Test
+    public void testPathfinder_t11() {
+        String[] maze = {
+            "XXXXXXXXXX",
+            "XI..MGM..X",
+            "XGM..M...X",
+            "XXXX.....X",
+            "X.K.XM...X",
+            "X........X",
+            "XXXXXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+        
+        int[] result = prob.testSolution(solution);
+        assertEquals(1, result[0]);  // Test that result is a solution
+        assertEquals(26, result[1]); // Ensure that the solution is optimal
+    }
 }
