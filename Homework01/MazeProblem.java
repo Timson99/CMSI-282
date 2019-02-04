@@ -1,3 +1,6 @@
+
+// Group: Tim Herrmann & Joe Maiocco 
+
 //package pathfinder.informed;
 
 import java.util.Map;
@@ -141,9 +144,11 @@ public class MazeProblem {
         }
         return result;
     }
-       /**
-          returns the cost associated with moving into that state in the MazeProblem's maze.
-            */
+    /**
+      * Takes the current state and returns the cost over moving through the current tile.
+      * @param MazeState state   The current state        
+      * @return int  The cost associated with the given state
+      */
     public int getCost(MazeState state) {
         if(maze[state.row].charAt(state.col) == 'M') {
             return 3;

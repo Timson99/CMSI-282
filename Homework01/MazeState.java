@@ -1,3 +1,6 @@
+
+// Group: Tim Herrmann & Joe Maiocco 
+
 //package pathfinder.informed;
 
 /**

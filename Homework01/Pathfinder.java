@@ -1,3 +1,7 @@
+
+
+// Group: Tim Herrmann & Joe Maiocco 
+
 //package pathfinder.informed;
 
 import java.util.ArrayList;
@@ -40,8 +44,7 @@ public class Pathfinder {
         
         
         while(currentFrontier.size() > 0) {
-            
-            //DEBUG
+        /* DEBUG
             PriorityQueue<SearchTreeNode> copy = new PriorityQueue<>(currentFrontier);
             System.out.println("\nFront of Queue:  ");
             while(copy.peek() != null) {
@@ -49,11 +52,8 @@ public class Pathfinder {
                 System.out.print( "(" + value.aStarCost + ", (" + value.state.row + "," + value.state.col + ")) ");
             }
              System.out.println(); 
-             //DEBUG
-             
-            
-           
-            
+          DEBUG */
+
             SearchTreeNode temp = currentFrontier.remove();
             graveyard.add(temp.state);
             
@@ -70,31 +70,47 @@ public class Pathfinder {
             }
             
             Map<String,MazeState> transitions = problem.getTransitions(temp.state);
-            System.out.println("\n   Expanding (" + temp.state.row + "," + temp.state.col +")\n");
+            //DEBUG
+            //System.out.println("\n   Expanding (" + temp.state.row + "," + temp.state.col +")\n");
+            //DEBUG
             for(Map.Entry<String, MazeState> action : transitions.entrySet()) {
        
                 SearchTreeNode generatedChild = new SearchTreeNode
-                    (action.getValue(),action.getKey(),temp, temp.history + problem.getCost(action.getValue()) , manhattanH(keyObtained, problem.GOAL_STATE, problem.KEY_STATE, action.getValue()));
+                    (action.getValue(),action.getKey(),temp, temp.history + problem.getCost(action.getValue()) , 
+                     manhattanH(keyObtained, problem.GOAL_STATE, problem.KEY_STATE, action.getValue()));
                     
-                
                 if(!graveyard.contains(generatedChild.state)) {
-                    System.out.println("Test " + action.getKey() + " " + action.getValue().row + " " + action.getValue().col + " " + generatedChild.history + " " + generatedChild.aStarCost + " ");
+                    //DEBUG
+                    //System.out.println("Test " + action.getKey() + " " + action.getValue().row + " " + action.getValue().col + " " + generatedChild.history + " " + generatedChild.aStarCost + " ");
+                    //DEBUG
                     currentFrontier.add(generatedChild);
-                    //graveyard.add(generatedChild.state);
                 }
             }
-            
         }
         // Should never get here, but just return null to make the compiler happy
-        return null;
-        
+        return null; 
     }
     
-    //manhattanH(keyObtained, problem.GOAL_STATE, problem.KEY_STATE, )
+    /**
+     *  Returns the number of tiles between a target using the Manhattan Heuristic
+     *  Goal can be either a key or a Goal State, depending on keyObtained parameter.
+     * @param boolean keyObtained                Tells method if the key tile has been passed over.
+     * @param ArrayList<MazeState> goalStates    Provides all the potential nearest goal states 
+     * @param MazeState keyState                 Provides state of the key
+     * @param MazeState state                    Provides current state
+     * @return int The number of uniform cost movements away from the nearest target, 
+     * which is the key state if the keyObtained is false, or the nearest goal state if keyObtained is true
+    */
     public static int manhattanH(boolean keyObtained, ArrayList<MazeState> goalStates, MazeState keyState, MazeState state) {
         return (keyObtained ? goalManhattanH(goalStates, state) :  keyManhattanH(keyState, state));
     }
     
+    /**
+     *  Returns the number of tiles between the nearest goal state using the Manhattan Heuristic
+     * @param ArrayList<MazeState> goalStates    Provides all the potential nearest goal states 
+     * @param MazeState state                    Provides current state
+     * @return int The number of uniform cost movements away from the nearest goal state.
+    */
     public static int goalManhattanH(ArrayList<MazeState> goalStates, MazeState state) { 
         PriorityQueue<Integer> sorter = new PriorityQueue<Integer>();
         for(int i = 0; i < goalStates.size(); i++) {
@@ -102,11 +118,24 @@ public class Pathfinder {
         }
         return sorter.peek(); 
     }
+    
+    /**
+     *  Returns the number of tiles between the nearest key state using the Manhattan Heuristic
+     * @param MazeState keyState                 Provides state of the key
+     * @param MazeState state                    Provides current state
+     * @return int The number of uniform cost movements away from the nearest key state.
+    */
     public static int keyManhattanH(MazeState keyState, MazeState state) { 
         
         return (Math.abs(keyState.row - state.row) + Math.abs(keyState.col - state.col));
     }
     
+    /**
+     *  Provides a boolean value to represent whether or not the current state matches the key state 
+     * @param MazeState keyState                 Provides state of the key
+     * @param MazeState state                    Provides current state
+     * @return boolean  Returns true if current state is key state, false if otherwise.
+    */
     public static boolean canCollectKey(MazeState state, MazeState keyState) {
         if(state.col == keyState.col && state.row == keyState.row) {
             return true;
@@ -114,6 +143,12 @@ public class Pathfinder {
         return false;
     }
     
+    /**
+     * Gets the path taken to reach the solution, from earliest to most recent
+     * @param MazeState keyState                 Provides state of the key
+     * @param MazeState state                    Provides current state
+     * @return ArrayList<String> The list of string actions taken to reach the solution
+    */
     public static ArrayList<String> getSolution(SearchTreeNode goal, MazeProblem problem) {
         ArrayList<String> solution = new ArrayList<String>();
         SearchTreeNode currentNode = goal;
@@ -121,12 +156,14 @@ public class Pathfinder {
             solution.add(0, currentNode.action);
             currentNode = currentNode.parent;
         }
-        //DEBUG
+       /*
+        //DEBUG 
         System.out.println();
         for(int i = 0; i < solution.size(); i++) {
                 System.out.print(" " + solution.get(i));
         }
         //DEBUG
+        */ 
         return solution;
     }
 }
@@ -149,6 +186,8 @@ class SearchTreeNode {
      * @param state The MazeState (col, row) that this node represents.
      * @param action The action that *led to* this state / node.
      * @param parent Reference to parent SearchTreeNode in the Search Tree.
+     * @param history The int representing spent cost in nodes history
+     * @param manhattan The int of  the current calculated manhattan cost
      */
     SearchTreeNode (MazeState state, String action, SearchTreeNode parent, int history, int manhattan) {
         this.state = state;

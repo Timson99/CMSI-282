@@ -1,3 +1,6 @@
+
+// Group: Tim Herrmann & Joe Maiocco 
+
 //package pathfinder.informed;
 
 import static org.junit.Assert.*;
@@ -214,5 +217,56 @@ public class PathfinderTests {
         int[] result = prob.testSolution(solution);
         assertEquals(1, result[0]);  // Test that result is a solution
         assertEquals(26, result[1]); // Ensure that the solution is optimal
+    }
+    @Test
+    public void testPathfinder_t12() {
+        String[] maze = {
+            "XXXXXXXXXXXX",
+            "XM.......MGX",
+            "XGM....MMMMX",
+            "X......M...X",
+            "XM....KM.IXX",
+            "X........XGX",
+            "XXXXXXXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+        
+        int[] result = prob.testSolution(solution);
+        assertEquals(1, result[0]);  // Test that result is a solution
+        assertEquals(12, result[1]); // Ensure that the solution is optimal
+    }
+    @Test
+    public void testPathfinder_t13() {
+        String[] maze = {
+            "XXXXXXXXXXXX",
+            "XGM.......GX",
+            "X.MMMMMMM.MM",
+            "X..........I",
+            "XXX.XXXXMXXX",
+            "X....K.....X",
+            "XXXXXXXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+        
+        int[] result = prob.testSolution(solution);
+        assertEquals(1, result[0]);  // Test that result is a solution
+        assertEquals(18, result[1]); // Ensure that the solution is optimal
+    }
+    @Test
+    public void testPathfinder_t14() {
+        String[] maze = {
+            "XXXXXXXXXXXX",
+            "XGM.......GX",
+            "X.MMMMMMM.MM",
+            "X..........I",
+            "XXX.XXXXMXXX",
+            "X...XK..X..X",
+            "XXXXXXXXXXXX"
+        };
+        MazeProblem prob = new MazeProblem(maze);
+        ArrayList<String> solution = Pathfinder.solve(prob);
+        assertNull(solution);
     }
 }
