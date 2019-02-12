@@ -31,21 +31,21 @@ public class NimPlayer {
         
         
         //DEBUG
-        System.out.println("END: ");
-        for(int i = 0; i < root.children.size(); i++) {
+        //System.out.println("END: ");
+        /*for(int i = 0; i < root.children.size(); i++) {
             System.out.print("Child " + (i + 1) + " : " + root.children.get(i).score + "\n");
-        }
+        }*/
         
         //DEBUG
         for(int i = 0; i < root.children.size(); i++) {
             if(root.children.get(i).score == 1) {
                 //
-                System.out.println("Returning: " + root.children.get(i).action);
+                //System.out.println("Returning: " + root.children.get(i).action);
                 //
                 return root.children.get(i).action;
             }
         }
-        System.out.println("Return Losing Default of 1");
+        //System.out.println("Return Losing Default of 1");
         return 1;
     }
     
@@ -63,12 +63,14 @@ public class NimPlayer {
     private int alphaBetaMinimax (GameTreeNode node, int alpha, int beta, boolean isMax, Map<GameTreeNode, Integer> visited) {
 
         if(node.remaining == 0) {
+            //System.out.println("Terminal State: Up : Score " + node.score);
             return node.score;
         }
-        
         if(visited.containsKey(node)) {
+            //System.out.println("Memoized State: Up : Score " + visited.get(node));
             return visited.get(node);
         }
+       
         
         if(isMax) {
             int minimaxScore = Integer.MIN_VALUE;
@@ -79,7 +81,7 @@ public class NimPlayer {
                 if(expandingChild == null) {
                     break;
                 }
-                //
+                
                 //System.out.println("Remaining " + node.remaining + " Down");
                 //
                 minimaxScore = Math.max(minimaxScore, alphaBetaMinimax(expandingChild, alpha, beta, false, visited));
@@ -88,6 +90,7 @@ public class NimPlayer {
                 //System.out.println("Remaining " + node.remaining + " Up  :  Score: " + minimaxScore);
                 //
                 if(beta <= alpha) {
+                    //System.out.println("Pruning: " + node.remaining + " child index " + i+1);
                     break;
                 }
             }
@@ -104,6 +107,8 @@ public class NimPlayer {
                     break;
                 }
                 //
+                
+                //
                 //System.out.println("Remaining " + node.remaining + " Down");
                 //
                 minimaxScore = Math.min(minimaxScore, alphaBetaMinimax(expandingChild, alpha, beta, true, visited));
@@ -112,6 +117,7 @@ public class NimPlayer {
                 //System.out.println("Remaining " + node.remaining + " Up  :  Score: " + minimaxScore);
                 //
                 if(beta <= alpha) {
+                  //System.out.println("Pruning: " + node.remaining + " child index " + i+1);
                   break;
                 }
             }
@@ -174,8 +180,8 @@ class GameTreeNode {
     public boolean equals (Object other) {
         return other instanceof GameTreeNode 
             ? remaining == ((GameTreeNode) other).remaining && 
-              isMax == ((GameTreeNode) other).isMax &&
-              action == ((GameTreeNode) other).action
+              isMax == ((GameTreeNode) other).isMax 
+              && action == ((GameTreeNode) other).action
             : false;
     }
     
