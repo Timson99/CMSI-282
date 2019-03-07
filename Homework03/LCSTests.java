@@ -90,7 +90,7 @@ public class LCSTests {
         ///* 
         assertEquals(
             new HashSet<>(Arrays.asList(
-                "AA", "BA"
+                "BA", "AA"
             )),
             LCS.bottomUpLCS("ABA", "BAA")
         );
@@ -101,6 +101,29 @@ public class LCSTests {
                 {0, 0, 1, 1},
                 {0, 1, 1, 1},
                 {0, 1, 2, 2}
+            },
+            LCS.memoCheck
+        );
+    }
+    
+    @Test
+    public void BULCSTest_t5() {
+        ///* 
+        assertEquals(
+            new HashSet<>(Arrays.asList(
+                "ABC", "XBC", "ABZ", "XBZ"
+            )),
+            LCS.bottomUpLCS("AXBCZ", "XABZC")
+        );
+        ///*/
+        assertArrayEquals(
+            new int[][] {
+                {0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 1, 1, 1},
+                {0, 1, 1, 1, 1, 1},
+                {0, 1, 1, 2, 2, 2},
+                {0, 1, 1, 2, 2, 3},
+                {0, 1, 1, 2, 3, 3},
             },
             LCS.memoCheck
         );

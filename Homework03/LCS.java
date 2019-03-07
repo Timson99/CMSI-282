@@ -16,71 +16,49 @@ public class LCS {
     // Shared Helper Methods
     // -----------------------------------------------
     
-    // [!] TODO: Add your shared helper methods here!
-    
-    public static void printTable(int[][] DP_Table) {
+    /*
+        Helper for collectSolution()
+        Takes a set and returns a copy of the set with a substring added to the left side of all elements
+      */
+    public static Set<String> addStrToAll(Set<String> original, String subStr) {
         
-        System.out.println();
-        for(int r = 0; r < DP_Table.length; r++) {
-            for(int c = 0; c < DP_Table[r].length; c++) {
-                System.out.print(DP_Table[r][c] + ",");
-            }
-            System.out.println();
+        Set<String> tempSet = new HashSet<String>();
+        for(String str : original) {
+            tempSet.add(str + subStr);
         }
-        System.out.println();
-        
+        return tempSet;
     }
     
-    
+    /**
+     * Collect Solution returns a Set of solutions that corresponds to a given fill dynamic programming problem table
+     * 
+     */
     public static Set<String> collectSolution( String rStr, String cStr, Set<String> result, int currentR, int currentC ) {
-        
-        
-        
+
         if(currentR <= 0 || currentC <= 0) {
             
             return result;  
         }
         else if( rStr.charAt( currentR - 1 ) == cStr.charAt( currentC - 1) ) {
             
-            
             Set<String> tempResult = collectSolution(rStr,cStr, result, currentR - 1, currentC - 1);
             
-            if(rStr.substring( currentR - 1, currentR ).equals("B") )
-                System.out.print("GOOOOOOOOOOOOOOAL");
-            
-            System.out.println("1 Begin");
-            for(String str : tempResult) {
-                System.out.print(str + ", ");
-            }
-            System.out.println("End\n");
-            
-            
             Set<String> copyResult = addStrToAll( tempResult, rStr.substring( currentR - 1, currentR ) );
-            
-            System.out.println("2 Begin");
-            for(String str : copyResult) {
-                System.out.print(str + ", ");
-            }
-            System.out.println("End");
-            
             tempResult.clear();
             tempResult.addAll(copyResult);
-            return tempResult;
             
+            return tempResult;  
         }
         else {
             
-
+            Set<String> tempResult1, tempResult2;
             Set<String> finalTempResult = new HashSet<String>();
-            Set<String> tempResult1;
-            Set<String> tempResult2;
             Set<String> resultCopy = new HashSet<String>(result);
             
             if( memoCheck[currentR-1][currentC] >=  memoCheck[currentR][currentC-1] ) {
                 
                 tempResult1 = collectSolution(rStr,cStr, result, currentR - 1, currentC);
                 finalTempResult = tempResult1;
-            
             }
             if( memoCheck[currentR][currentC-1] >=  memoCheck[currentR-1][currentC] ) {
                 
@@ -90,25 +68,9 @@ public class LCS {
                     finalTempResult.addAll(tempResult2);
                 else
                     finalTempResult = tempResult2;
-                    
-                
             }
-            
             return finalTempResult; 
-            
         }
-    }
-    
-    /*
-        Adds the same 
-      */
-    public static Set<String> addStrToAll(Set<String> original, String subStr) {
-        
-        Set<String> tempSet = new HashSet<String>();
-        for(String str : original) {
-            tempSet.add(str + subStr);
-        }
-        return tempSet;
     }
 
     // -----------------------------------------------
@@ -133,23 +95,19 @@ public class LCS {
         int colLength = cStr.length() + 1;
         int[][] DP_Table = new int[rowLength][colLength];
         
-        
         for(int r = 1; r < rowLength; r++) {
             for(int c = 1; c < colLength; c++) {
 
                 if( rStr.charAt(r-1) == cStr.charAt(c-1) ) {
                     
-                   DP_Table[r][c] = 1 + DP_Table[r-1][c-1]; 
-  
+                   DP_Table[r][c] = 1 + DP_Table[r-1][c-1];  
                 }
                 else {
                     
                    DP_Table[r][c]= Math.max( DP_Table[r][c-1] , DP_Table[r-1][c] ); 
-                   
                 }
             }
         }
-        
         memoCheck = DP_Table;
         return collectSolution(rStr, cStr, solutions, rowLength - 1, colLength - 1);
     }
@@ -176,18 +134,19 @@ public class LCS {
         int colLength = cStr.length() + 1;
         int[][] DP_Table = new int[rowLength][colLength];
         
-        
-        
         DP_Table = topDownTableFill(rStr,cStr, DP_Table, rowLength - 1, colLength - 1);
-        
-        
         memoCheck = DP_Table;
         return collectSolution(rStr, cStr, solutions, rowLength - 1, colLength - 1);
     }
     
+    /*
+      * Helper method for topDownLCS()
+      * Fills a dynamic programming subproblem table according to the topDown methodology
+      */
     public static int[][] topDownTableFill(String rStr, String cStr, int[][] DP_Table, int currentR, int currentC) {
         
         if(currentR <= 0 || currentC <= 0) {
+            
             return DP_Table;  
         }
         else if( rStr.charAt( currentR - 1 ) == cStr.charAt( currentC - 1) ) {
@@ -195,7 +154,6 @@ public class LCS {
             int[][] tempDP = topDownTableFill(rStr,cStr, DP_Table, currentR - 1, currentC - 1);
             tempDP[currentR][currentC] = tempDP[currentR - 1][currentC - 1] + 1;
             return tempDP;
-            
         }
         else {
             
@@ -207,10 +165,7 @@ public class LCS {
                 tempDP[currentR][currentC] = tempDP[currentR][currentC - 1];
             }
             
-            return tempDP;
-            
+            return tempDP; 
         }
-    }
-    
-    
+    } 
 }
