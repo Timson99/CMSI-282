@@ -123,12 +123,62 @@ public class LCSTests {
                 {0, 1, 1, 1, 1, 1},
                 {0, 1, 1, 2, 2, 2},
                 {0, 1, 1, 2, 2, 3},
-                {0, 1, 1, 2, 3, 3},
+                {0, 1, 1, 2, 3, 3}
             },
             LCS.memoCheck
         );
     }
     
+    ///*
+    @Test
+    public void BULCSTest_t6() {
+        assertEquals(
+            new HashSet<>(Arrays.asList(
+                "ACDBD"
+            )),
+            LCS.bottomUpLCS("ABCDBDD", "CACDBDB")
+        );
+        assertArrayEquals(
+            new int[][] {
+                {0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 1, 1, 1, 1, 1},
+                {0, 0, 1, 1, 1, 2, 2, 2},
+                {0, 1, 1, 2, 2, 2, 2, 2},
+                {0, 1, 1, 2, 3, 3, 3, 3},
+                {0, 1, 1, 2, 3, 4, 4, 4},
+                {0, 1, 1, 2, 3, 4, 5, 5},
+                {0, 1, 1, 2, 3, 4, 5, 5}
+            },
+            LCS.memoCheck
+        );
+    }
+    
+    //*/
+    ///*
+    @Test
+    public void BULCSTest_t7() {
+        assertEquals(
+            new HashSet<>(Arrays.asList(
+                "FA", "DE", "DA"
+            )),
+            LCS.bottomUpLCS("FDDADBEE", "CDEFCAAC")
+        );
+        assertArrayEquals(
+            new int[][] {
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 1, 1, 1, 1, 1},
+                {0, 0, 1, 1, 1, 1, 1, 1, 1},
+                {0, 0, 1, 1, 1, 1, 1, 1, 1},
+                {0, 0, 1, 1, 1, 1, 2, 2, 2},
+                {0, 0, 1, 1, 1, 1, 2, 2, 2},
+                {0, 0, 1, 1, 1, 1, 2, 2, 2},
+                {0, 0, 1, 2, 2, 2, 2, 2, 2},
+                {0, 0, 1, 2, 2, 2, 2, 2, 2}
+            },
+            LCS.memoCheck
+        );
+    }
+    //*/
     
     // Top-Down LCS Tests
     // -----------------------------------------------
@@ -225,6 +275,31 @@ public class LCSTests {
             },
             LCS.memoCheck
         );
+    }
+    
+    @Test
+    public void TDLCSTest_t5() {
+        assertEquals(
+            new HashSet<>(Arrays.asList(
+                "ABC", "XBC", "ABZ", "XBZ"
+            )),
+            LCS.topDownLCS("AXBCZ", "XABZC")
+        );
+
+      ///*
+        assertArrayEquals(
+            new int[][] {
+                {0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 1, 1, 0},
+                {0, 1, 1, 1, 1, 0},
+                {0, 1, 1, 2, 2, 0},
+                {0, 1, 1, 2, 0, 3},
+                {0, 0, 0, 0, 3, 3}
+            },
+            LCS.memoCheck
+            
+        );
+        //*/
     }
     
 }

@@ -16,7 +16,21 @@ public class LCS {
     // Shared Helper Methods
     // -----------------------------------------------
     
-    /*
+    public static void printTable(int[][] DP_Table) {
+
+        System.out.println();
+        for(int r = 0; r < DP_Table.length; r++) {
+            for(int c = 0; c < DP_Table[r].length; c++) {
+                System.out.print(DP_Table[r][c] + ",");
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+    }
+    
+    
+    /**
         Helper for collectSolution()
         Takes a set and returns a copy of the set with a substring added to the left side of all elements
       */
@@ -136,10 +150,11 @@ public class LCS {
         
         DP_Table = topDownTableFill(rStr,cStr, DP_Table, rowLength - 1, colLength - 1);
         memoCheck = DP_Table;
+        printTable(memoCheck);
         return collectSolution(rStr, cStr, solutions, rowLength - 1, colLength - 1);
     }
     
-    /*
+    /**
       * Helper method for topDownLCS()
       * Fills a dynamic programming subproblem table according to the topDown methodology
       */
@@ -156,13 +171,14 @@ public class LCS {
             return tempDP;
         }
         else {
-            
             int[][] tempDP = topDownTableFill(rStr,cStr, DP_Table, currentR - 1, currentC);
-            tempDP[currentR][currentC] = tempDP[currentR - 1][currentC];
             tempDP = topDownTableFill(rStr,cStr, tempDP, currentR, currentC - 1);
             
-            if(tempDP[currentR][currentC] > tempDP[currentR][currentC - 1]) {
+            if(tempDP[currentR - 1][currentC] < tempDP[currentR][currentC - 1]) {
                 tempDP[currentR][currentC] = tempDP[currentR][currentC - 1];
+            }
+            else {
+                tempDP[currentR][currentC] = tempDP[currentR - 1][currentC];
             }
             
             return tempDP; 
