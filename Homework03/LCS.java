@@ -37,13 +37,32 @@ public class LCS {
         
         
         if(currentR <= 0 || currentC <= 0) {
+            
             return result;  
         }
         else if( rStr.charAt( currentR - 1 ) == cStr.charAt( currentC - 1) ) {
             
+            
             Set<String> tempResult = collectSolution(rStr,cStr, result, currentR - 1, currentC - 1);
             
+            if(rStr.substring( currentR - 1, currentR ).equals("B") )
+                System.out.print("GOOOOOOOOOOOOOOAL");
+            
+            System.out.println("1 Begin");
+            for(String str : tempResult) {
+                System.out.print(str + ", ");
+            }
+            System.out.println("End\n");
+            
+            
             Set<String> copyResult = addStrToAll( tempResult, rStr.substring( currentR - 1, currentR ) );
+            
+            System.out.println("2 Begin");
+            for(String str : copyResult) {
+                System.out.print(str + ", ");
+            }
+            System.out.println("End");
+            
             tempResult.clear();
             tempResult.addAll(copyResult);
             return tempResult;
@@ -51,9 +70,11 @@ public class LCS {
         }
         else {
             
+
             Set<String> finalTempResult = new HashSet<String>();
             Set<String> tempResult1;
             Set<String> tempResult2;
+            Set<String> resultCopy = new HashSet<String>(result);
             
             if( memoCheck[currentR-1][currentC] >=  memoCheck[currentR][currentC-1] ) {
                 
@@ -63,7 +84,8 @@ public class LCS {
             }
             if( memoCheck[currentR][currentC-1] >=  memoCheck[currentR-1][currentC] ) {
                 
-                tempResult2 = collectSolution(rStr, cStr, result, currentR, currentC - 1);
+                tempResult2 = collectSolution(rStr, cStr, resultCopy, currentR, currentC - 1);
+                
                 if(finalTempResult != null)
                     finalTempResult.addAll(tempResult2);
                 else
@@ -84,7 +106,7 @@ public class LCS {
         
         Set<String> tempSet = new HashSet<String>();
         for(String str : original) {
-            tempSet.add(subStr + str);
+            tempSet.add(str + subStr);
         }
         return tempSet;
     }
