@@ -180,6 +180,29 @@ public class LCSTests {
     }
     //*/
     
+    @Test
+    public void BULCSTest_t8() {
+        assertEquals(
+            new HashSet<>(Arrays.asList(
+                "TGACA"
+            )),
+            LCS.bottomUpLCS("TGATCA","GTGACAT")
+        );
+        assertArrayEquals(
+            new int[][] {
+                {0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 1, 1, 1, 1, 1},
+                {0, 1, 1, 2, 2, 2, 2, 2},
+                {0, 1, 1, 2, 3, 3, 3, 3},
+                {0, 1, 2, 2, 3, 3, 3, 4},
+                {0, 1, 2, 2, 3, 4, 4, 4},
+                {0, 1, 2, 2, 3, 4, 5, 5}
+             
+            },
+            LCS.memoCheck
+        );
+    }
+    
     // Top-Down LCS Tests
     // -----------------------------------------------
     @Test
@@ -300,6 +323,81 @@ public class LCSTests {
             
         );
         //*/
+        
+        
+    }
+    
+    @Test
+    public void TDLCSTest_t6() {
+        assertEquals(
+            new HashSet<>(Arrays.asList(
+                "ACDBD"
+            )),
+            LCS.topDownLCS("ABCDBDD", "CACDBDB")
+        );
+        assertArrayEquals(
+            new int[][] {
+                {0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 1, 1, 0, 0, 0},
+                {0, 0, 1, 1, 1, 2, 0, 0},
+                {0, 1, 1, 2, 2, 2, 0, 0},
+                {0, 1, 1, 2, 3, 0, 3, 0},
+                {0, 1, 1, 2, 0, 4, 0, 4},
+                {0, 0, 0, 0, 3, 4, 5, 5},
+                {0, 0, 0, 0, 0, 0, 5, 5}
+            },
+            LCS.memoCheck
+        );
+    }
+    
+    
+        ///*
+    @Test
+    public void TDLCSTest_t7() {
+        assertEquals(
+            new HashSet<>(Arrays.asList(
+                "FA", "DE", "DA"
+            )),
+            LCS.topDownLCS("FDDADBEE", "CDEFCAAC")
+        );
+        assertArrayEquals(
+            new int[][] {
+                {0, 0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 0, 0, 1, 1, 1, 1, 1},
+                {0, 0, 1, 1, 1, 1, 1, 1, 1},
+                {0, 0, 1, 1, 1, 1, 1, 1, 1},
+                {0, 0, 1, 1, 1, 1, 2, 2, 2},
+                {0, 0, 1, 1, 1, 1, 2, 2, 2},
+                {0, 0, 1, 1, 1, 1, 2, 2, 2},
+                {0, 0, 1, 2, 2, 2, 2, 2, 2},
+                {0, 0, 0, 2, 2, 2, 2, 2, 2}
+            },
+            LCS.memoCheck
+        );
+    }
+    //*/
+    
+    @Test
+    public void TDLCSTest_t8() {
+        assertEquals(
+            new HashSet<>(Arrays.asList(
+                "TGACA"
+            )),
+            LCS.topDownLCS("TGATCA","GTGACAT")
+        );
+        assertArrayEquals(
+            new int[][] {
+                {0, 0, 0, 0, 0, 0, 0, 0},
+                {0, 0, 1, 1, 1, 1, 0, 0},
+                {0, 1, 1, 2, 2, 2, 0, 0},
+                {0, 1, 1, 2, 3, 3, 3, 0},
+                {0, 0, 2, 2, 3, 3, 3, 4},
+                {0, 0, 0, 0, 0, 4, 4, 4},
+                {0, 0, 0, 0, 0, 0, 5, 5}
+             
+            },
+            LCS.memoCheck
+        );
     }
     
 }
