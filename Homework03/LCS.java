@@ -15,24 +15,13 @@ public class LCS {
     // -----------------------------------------------
     // Shared Helper Methods
     // -----------------------------------------------
-    
-    public static void printTable(int[][] DP_Table) {
-
-        System.out.println();
-        for(int r = 0; r < DP_Table.length; r++) {
-            for(int c = 0; c < DP_Table[r].length; c++) {
-                System.out.print(DP_Table[r][c] + ",");
-            }
-            System.out.println();
-        }
-        System.out.println();
-
-    }
-    
-    
+     
     /**
         Helper for collectSolution()
         Takes a set and returns a copy of the set with a substring added to the left side of all elements
+        @param original       Holds the Set of Strings that will be copied and modified
+        @param subStr         String to be concatenated to the end of every string in original 
+        @return               Set of Strings that is a copy of original with the subStr attached to all elements
       */
     public static Set<String> addStrToAll(Set<String> original, String subStr) {
         
@@ -45,7 +34,14 @@ public class LCS {
     
     /**
      * Collect Solution returns a Set of solutions that corresponds to a given fill dynamic programming problem table
-     * 
+     * Collects solution from memoCheck class field
+     * Uses Recursion
+     * @param rStr          String associated with table row
+     * @param cStr          String associated with table colLength
+     * @param result        Initialized but empty set of strings to be modified
+     * @param currentR      Keeps track of current row index in table during recursion
+     * @param currentC      Keeps track of current col index in table during recursion
+     * @return              Returns table filled using the top down approach
      */
     public static Set<String> collectSolution( String rStr, String cStr, Set<String> result, int currentR, int currentC ) {
 
@@ -150,14 +146,19 @@ public class LCS {
         
         DP_Table = topDownTableFill(rStr,cStr, DP_Table, rowLength - 1, colLength - 1);
         memoCheck = DP_Table;
-        printTable(memoCheck);
         return collectSolution(rStr, cStr, solutions, rowLength - 1, colLength - 1);
     }
     
     /**
-      * Helper method for topDownLCS()
-      * Fills a dynamic programming subproblem table according to the topDown methodology
-      */
+     * Helper method for topDownLCS() using recursion
+     * Fills a dynamic programming subproblem table according to the topDown methodology
+     * @param rStr          String associated with table row
+     * @param cStr          String associated with table colLength
+     * @param DP_Table      Initialized but empty table 2D int array to be modified
+     * @param currentR      Keeps track of current row index in table during recursion
+     * @param currentC      Keeps track of current col index in table during recursion
+     * @return              Returns table filled using the top down approach
+     */
     public static int[][] topDownTableFill(String rStr, String cStr, int[][] DP_Table, int currentR, int currentC) {
         
         if(currentR <= 0 || currentC <= 0) {
