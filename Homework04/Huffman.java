@@ -15,7 +15,7 @@ public class Huffman {
     // -----------------------------------------------
 
     private HuffNode trieRoot;
-    private Map<Character, String> encodingMap;
+    private Map<Character, String> encodingMap = new HashMap<Character,String>();
     private Map<Character, Integer> frequencyTable;
     
     private String corpus;
@@ -40,7 +40,14 @@ public class Huffman {
         createFrequencyQueue();
         createHuffmanTrie();
         createEncodingMap(trieRoot, ""); 
-       
+        /*
+        for (Map.Entry<Character, String> entry : encodingMap.entrySet()) {
+            Character character = entry.getKey();
+            String path = entry.getValue();
+            
+            System.out.println("ENTRY: " + character + "," + path);
+        }
+       */
     }
     
     
@@ -88,8 +95,6 @@ public class Huffman {
     
     private void createEncodingMap(HuffNode localRoot, String path) {
         
-        encodingMap = new HashMap<Character,String>();
-        
         if( localRoot.isLeaf() ) {
             encodingMap.put(localRoot.character, path);
             return;
@@ -118,10 +123,36 @@ public class Huffman {
      */
     public byte[] compress (String message) {
         
-        byte[] binaryCompression = new byte[3];
-        byte characterCount = (byte)message.length();
+        System.out.println(message);
         
-        return new byte[] {2,64};
+        String content = "";
+        for(int i = 0; i < message.length(); i++) {
+            
+            //System.out.println("Searching for " + message.charAt(i));
+            //System.out.println(encodingMap.get(message.charAt(i)));
+            
+            content += encodingMap.get(message.charAt(i));
+            
+             //System.out.println(content);
+        }
+        
+        int byteArrSize = (int)(content.length() / 8) + 2;     
+        byte[] binaryCompression = new byte[byteArrSize];
+        
+        byte characterCount = (byte)message.length();
+        binaryCompression[0] = characterCount;
+        
+        while(content.length() % 8 != 0)
+            content += "0";
+        
+        for(int i = 1; i < byteArrSize; i++) {
+            
+            String byteStr = content.substring( (i-1) * 8, i*8 );
+            System.out.print("\n Content:" + content + "\n");
+            binaryCompression[i] = (byte)Integer.parseInt(byteStr,2); 
+        }
+            
+        return binaryCompression;
     }
     
     
