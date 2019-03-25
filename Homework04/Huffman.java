@@ -35,19 +35,13 @@ public class Huffman {
      *        differ.
      */
     Huffman (String corpus) {
+        
         this.corpus = corpus;
         createFrequencyTable();
         createFrequencyQueue();
         createHuffmanTrie();
         createEncodingMap(trieRoot, ""); 
-        /*
-        for (Map.Entry<Character, String> entry : encodingMap.entrySet()) {
-            Character character = entry.getKey();
-            String path = entry.getValue();
-            
-            System.out.println("ENTRY: " + character + "," + path);
-        }
-       */
+        
     }
     
     
@@ -123,18 +117,9 @@ public class Huffman {
      */
     public byte[] compress (String message) {
         
-        System.out.println(message);
-        
         String content = "";
-        for(int i = 0; i < message.length(); i++) {
-            
-            //System.out.println("Searching for " + message.charAt(i));
-            //System.out.println(encodingMap.get(message.charAt(i)));
-            
+        for(int i = 0; i < message.length(); i++) 
             content += encodingMap.get(message.charAt(i));
-            
-             //System.out.println(content);
-        }
         
         int byteArrSize = (int)(content.length() / 8) + 2;     
         byte[] binaryCompression = new byte[byteArrSize];
@@ -146,9 +131,7 @@ public class Huffman {
             content += "0";
         
         for(int i = 1; i < byteArrSize; i++) {
-            
             String byteStr = content.substring( (i-1) * 8, i*8 );
-            System.out.print("\n Content:" + content + "\n");
             binaryCompression[i] = (byte)Integer.parseInt(byteStr,2); 
         }
             
@@ -172,7 +155,42 @@ public class Huffman {
      * @return Decompressed String representation of the compressed bytecode message.
      */
     public String decompress (byte[] compressedMsg) {
-        throw new UnsupportedOperationException();
+        
+        int arrSize = compressedMsg.length;
+        int msgSize = (int)compressedMsg[0];
+        String compressedBitStr = "";
+        String decompressedMsg = "";
+          
+        for(int i = 1; i < arrSize; i++) {
+            compressedBitStr += String.format("%8s", Integer.toBinaryString(compressedMsg[i] & 0xFF)).replace(' ', '0');
+        }
+        
+        int counter = 0;
+        HuffNode localRoot = trieRoot;
+        while(decompressedMsg.length() < msgSize || counter == compressedBitStr.length() ) {
+           
+            char pathChar = compressedBitStr.charAt(counter);
+            
+            if(pathChar == '1') {
+                localRoot = localRoot.right;
+            }
+            else if(pathChar == '0') {
+                localRoot = localRoot.left;
+            }
+            else {
+                break;
+            }
+            
+            if(localRoot.isLeaf()) {
+                
+                decompressedMsg += localRoot.character;
+                localRoot = trieRoot;
+            }
+            
+        
+            counter++;
+        }
+        return decompressedMsg;
     }
     
     
