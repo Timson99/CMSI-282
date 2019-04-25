@@ -85,60 +85,41 @@ public class CSP {
         
         for(DateConstraint constraint : constraints) {
         
-            if(constraint.L_VAL != meetingId) {
+            LocalDate leftDate = getLocalDate(constraint.L_VAL,solution);
+            LocalDate rightDate;
+            if(constraint.arity() == 1)
+                rightDate = ( (UnaryDateConstraint) constraint).R_VAL;
+            else if(constraint.arity() == 2)
+                rightDate = getLocalDate( ( (BinaryDateConstraint) constraint).R_VAL , solution);
+            
+            
+            if(leftDate == null || rightDate == null || leftDate != getLocalDate(meetingId,solution) || rightDate != getLocalDate(meetingId,solution)) {
                 continue;
             }
             
             boolean pass = false;
             
+            //Use get local dtae function
+            
+            
             switch(constraint.OP) {
                 case "==": 
-                
-                    if(constraint.arity() == 2)
-                        pass = solution.get(meetingId).isEqual( solution.get(((BinaryDateConstraint) constraint).R_VAL) );
-                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
-                        pass = solution.get(meetingId).isEqual( ((UnaryDateConstraint) constraint).R_VAL);
-                   
+                    pass = leftDate.equals(rightDate);
                     break;
                 case "!=":
-                
-                    if(constraint.arity() == 2)
-                        pass = !solution.get(meetingId).isEqual( solution.get(((BinaryDateConstraint) constraint).R_VAL) );
-                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
-                        pass = !solution.get(meetingId).isEqual( ((UnaryDateConstraint) constraint).R_VAL);
-                    
+                    pass = !leftDate.equals(rightDate);
                     break;
                 case "<":
-                
-                    if(constraint.arity() == 2)
-                        pass = solution.get(meetingId).compareTo( solution.get(((BinaryDateConstraint) constraint).R_VAL) ) < 0;
-                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
-                        pass = solution.get(meetingId).compareTo( ((UnaryDateConstraint) constraint).R_VAL) < 0;
-                
+                    pass = leftDate.compareTo(rightDate) < 0;
                     break;
                 case "<=":
-                
-                    if(constraint.arity() == 2)
-                        pass = solution.get(meetingId).compareTo( solution.get(((BinaryDateConstraint) constraint).R_VAL) ) <= 0;
-                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
-                        pass = solution.get(meetingId).compareTo( ((UnaryDateConstraint) constraint).R_VAL) <= 0;
-                
+                    pass = leftDate.compareTo(rightDate) <= 0;
                     break;
                 case ">":
-                
-                    if(constraint.arity() == 2)
-                        pass = solution.get(meetingId).compareTo( solution.get(((BinaryDateConstraint) constraint).R_VAL) ) > 0;
-                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
-                        pass = solution.get(meetingId).compareTo( ((UnaryDateConstraint) constraint).R_VAL) > 0;
-                
+                    pass = leftDate.compareTo(rightDate) > 0;
                     break;
                 case ">=":
-                
-                    if(constraint.arity() == 2)
-                        pass = solution.get(meetingId).compareTo( solution.get(((BinaryDateConstraint) constraint).R_VAL) ) >= 0  ;
-                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
-                        pass = solution.get(meetingId).compareTo( ((UnaryDateConstraint) constraint).R_VAL) >= 0  ;
-                    
+                    pass = leftDate.compareTo(rightDate) >= 0;
                     break;
                 default:
                     throw new IllegalArgumentException("OP Not Defined");
@@ -149,6 +130,10 @@ public class CSP {
             }
         }
         return true;
+    }
+    
+    public static LocalDate getLocalDate(int meetingId ,List<LocalDate> solution) {
+            return solution.get(meetingId);
     }
 
     /*
