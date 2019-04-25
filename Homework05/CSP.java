@@ -39,10 +39,30 @@ public class CSP {
             solution.add(null);
         }
         
-        
+        ///*
+        for(int i = 0; i < nMeetings; i++) {   
+            System.out.print("\n " + i + ": \n[");        
+            for(LocalDate date : meetingList.get(i).domain) {
+                
+                System.out.print(date + ", " );
+            }
+            System.out.print("]\n");
+        }
+        //*/
         
         nodeConsistency(meetingList, constraints);
         arcConsistency(meetingList, constraints);
+        
+        ///*
+        for(int i = 0; i < nMeetings; i++) {  
+            System.out.print("\n " + i + ": \n[");        
+            for(LocalDate date : meetingList.get(i).domain) {
+                
+                System.out.print(date + ", " );
+            }
+            System.out.print("]\n");
+        }
+        //*/
         
         return backtracking(solution, meetingList, constraints);
     }
@@ -99,6 +119,7 @@ public class CSP {
                 continue;
             }
             
+            
             ArrayList<LocalDate> toRemove = new ArrayList<LocalDate>();
             MeetingVar meeting = meetingList.get(constraint.L_VAL);
             LocalDate rightDate = ( (UnaryDateConstraint) constraint).R_VAL;
@@ -134,8 +155,8 @@ public class CSP {
             //System.out.println("\n" + constraint.toString() + "\n");
             
             ArrayList<LocalDate> toRemove = new ArrayList<LocalDate>();
-            MeetingVar meetingRight = meetingList.get(constraint.L_VAL);
-            MeetingVar meetingLeft =  meetingList.get( ((BinaryDateConstraint) constraint).R_VAL);
+            MeetingVar meetingLeft = meetingList.get(constraint.L_VAL);
+            MeetingVar meetingRight =  meetingList.get( ((BinaryDateConstraint) constraint).R_VAL);
  
             /*
             System.out.print("Values in Right Domain: [");
@@ -144,7 +165,7 @@ public class CSP {
                 System.out.print(rightDomainDate.toString() + " , ");
             }
             System.out.println("]");
-            */
+            //*/
  
             //
             for(LocalDate rightDomainDate: meetingRight.domain) { //Right is Acting Tail
@@ -162,12 +183,10 @@ public class CSP {
                         case ">=": if (leftDomainDate.isAfter(rightDomainDate) || leftDomainDate.isEqual(rightDomainDate)) anyConsistent = true; break;
                         case "<=": if (leftDomainDate.isBefore(rightDomainDate) || leftDomainDate.isEqual(rightDomainDate))  anyConsistent = true; break;
                     }
-                    
+                    //System.out.println("Any Consistent: " + anyConsistent);
                     
                 }
-                if(!anyConsistent) {
-                        toRemove.add(rightDomainDate);
-                    }
+                if(!anyConsistent) toRemove.add(rightDomainDate);
             }
             
             for(int i = 0; i < toRemove.size(); i++) {
@@ -179,7 +198,7 @@ public class CSP {
             for(LocalDate rightDomainDate: meetingRight.domain) {
                 System.out.print(rightDomainDate.toString() + " , ");
             }
-            System.out.println("]");
+            System.out.println("]\n");
             
             
             System.out.print("Values in Left Domain: [");
@@ -188,12 +207,13 @@ public class CSP {
                 System.out.print(leftDomainDate.toString() + " , ");
             }
             System.out.println("]");
-            */
+            //*/
             //
             for(LocalDate leftDomainDate: meetingLeft.domain) { //Left is Acting Tail
                 boolean anyConsistent = false;
                 for(LocalDate rightDomainDate: meetingRight.domain) { //Right is Acting Head
                     
+                    //System.out.println("  -> " + leftDomainDate + " " + constraint.OP + " " + rightDomainDate);
             
                     switch (constraint.OP) {
                         case "==": if (leftDomainDate.isEqual(rightDomainDate))  anyConsistent = true; break;
@@ -203,6 +223,7 @@ public class CSP {
                         case ">=": if (leftDomainDate.isAfter(rightDomainDate) ||  leftDomainDate.isEqual(rightDomainDate)) anyConsistent = true; break;
                         case "<=": if (leftDomainDate.isBefore(rightDomainDate) || leftDomainDate.isEqual(rightDomainDate)) anyConsistent = true; break;
                     }
+                    //System.out.println("Any Consistent: " + anyConsistent);
                     
                     
                 }
@@ -212,14 +233,14 @@ public class CSP {
             for(int i = 0; i < toRemove.size(); i++) {
                 meetingLeft.domain.remove(toRemove.get(i));
             }
-            /*
+           /*
             System.out.print("Left Domain After: [");
             
             for(LocalDate leftDomainDate: meetingLeft.domain) {
                 System.out.print(leftDomainDate.toString() + " , ");
             }
             System.out.println("]");
-            */
+            //*/
         }
         
     }
