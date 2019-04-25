@@ -140,6 +140,7 @@ public class CSP {
                     case "<=": if (domainDate.isAfter(rightDate))  toRemove.add(domainDate); break;
                 }
             
+            
             }
           
             for(int i = 0; i < toRemove.size(); i++) {
