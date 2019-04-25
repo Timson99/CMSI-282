@@ -26,6 +26,10 @@ public class CSP {
      */
     public static List<LocalDate> solve (int nMeetings, LocalDate rangeStart, LocalDate rangeEnd, Set<DateConstraint> constraints) {
         
+        
+        System.out.println("\n\n\nBEGINNING SOLVE PROCEDURE\n\n\n");
+        
+        
         ArrayList<LocalDate> solution = new ArrayList<LocalDate>();
         ArrayList<MeetingVar> meetingList = new ArrayList<MeetingVar>(); 
         
@@ -87,6 +91,8 @@ public class CSP {
     
     public static void nodeConsistency(List<MeetingVar> meetingList, Set<DateConstraint> constraints) {
         
+        
+        
         for(DateConstraint constraint : constraints) {
             
             if(constraint.arity() == 2) {
@@ -118,36 +124,104 @@ public class CSP {
     }
     
     public static void arcConsistency(List<MeetingVar> meetingList, Set<DateConstraint> constraints) {
-        /*
+        
         for(DateConstraint constraint : constraints) {
             
             if(constraint.arity() == 1) {
                 continue;
             }
             
+            //System.out.println("\n" + constraint.toString() + "\n");
+            
             ArrayList<LocalDate> toRemove = new ArrayList<LocalDate>();
-            MeetingVar meeting = meetingList.get(constraint.L_VAL);
-            //LocalDate rightDate = ( (BinaryDateConstraint) constraint).R_VAL;
+            MeetingVar meetingRight = meetingList.get(constraint.L_VAL);
+            MeetingVar meetingLeft =  meetingList.get( ((BinaryDateConstraint) constraint).R_VAL);
  
-            for(LocalDate domainDate: meeting.domain) {
             /*
-                switch (constraint.OP) {
-                    case "==": if (!domainDate.isEqual(rightDate))  toRemove.add(domainDate); break;
-                    case "!=": if (domainDate.isEqual(rightDate)) toRemove.add(domainDate); break;
-                    case ">":  if (domainDate.isBefore(rightDate) || domainDate.isEqual(rightDate))  toRemove.add(domainDate); break;
-                    case "<":  if (domainDate.isAfter(rightDate) ||  domainDate.isEqual(rightDate)) toRemove.add(domainDate); break;
-                    case ">=": if (domainDate.isBefore(rightDate)) toRemove.add(domainDate); break;
-                    case "<=": if (domainDate.isAfter(rightDate))  toRemove.add(domainDate); break;
+            System.out.print("Values in Right Domain: [");
+            
+            for(LocalDate rightDomainDate: meetingRight.domain) {
+                System.out.print(rightDomainDate.toString() + " , ");
+            }
+            System.out.println("]");
+            */
+ 
+            //
+            for(LocalDate rightDomainDate: meetingRight.domain) { //Right is Acting Tail
+                 boolean anyConsistent = false;
+                for(LocalDate leftDomainDate: meetingLeft.domain) { //Left is Acting Head
+                    
+                     
+                     //System.out.println("  <- " + leftDomainDate + " " + constraint.OP + " " + rightDomainDate);
+            
+                    switch (constraint.OP) {
+                        case "==": if (leftDomainDate.isEqual(rightDomainDate))  anyConsistent = true; break;
+                        case "!=": if (!leftDomainDate.isEqual(rightDomainDate))   anyConsistent = true; break;
+                        case ">":  if (leftDomainDate.isAfter(rightDomainDate)) anyConsistent = true; break;
+                        case "<":  if (leftDomainDate.isBefore(rightDomainDate)) anyConsistent = true; break;
+                        case ">=": if (leftDomainDate.isAfter(rightDomainDate) || leftDomainDate.isEqual(rightDomainDate)) anyConsistent = true; break;
+                        case "<=": if (leftDomainDate.isBefore(rightDomainDate) || leftDomainDate.isEqual(rightDomainDate))  anyConsistent = true; break;
+                    }
+                    
+                    
                 }
-            
-            
+                if(!anyConsistent) {
+                        toRemove.add(rightDomainDate);
+                    }
             }
-          
+            
             for(int i = 0; i < toRemove.size(); i++) {
-                meeting.domain.remove(toRemove.get(i));
+                meetingRight.domain.remove(toRemove.get(i));
             }
+            /*
+            System.out.print("Right Domain After: [");
+            
+            for(LocalDate rightDomainDate: meetingRight.domain) {
+                System.out.print(rightDomainDate.toString() + " , ");
+            }
+            System.out.println("]");
+            
+            
+            System.out.print("Values in Left Domain: [");
+            
+            for(LocalDate leftDomainDate: meetingLeft.domain) {
+                System.out.print(leftDomainDate.toString() + " , ");
+            }
+            System.out.println("]");
+            */
+            //
+            for(LocalDate leftDomainDate: meetingLeft.domain) { //Left is Acting Tail
+                boolean anyConsistent = false;
+                for(LocalDate rightDomainDate: meetingRight.domain) { //Right is Acting Head
+                    
+            
+                    switch (constraint.OP) {
+                        case "==": if (leftDomainDate.isEqual(rightDomainDate))  anyConsistent = true; break;
+                        case "!=": if (!leftDomainDate.isEqual(rightDomainDate))   anyConsistent = true; break;
+                        case ">":  if (leftDomainDate.isAfter(rightDomainDate)) anyConsistent = true; break;
+                        case "<":  if (leftDomainDate.isBefore(rightDomainDate)) anyConsistent = true; break;
+                        case ">=": if (leftDomainDate.isAfter(rightDomainDate) ||  leftDomainDate.isEqual(rightDomainDate)) anyConsistent = true; break;
+                        case "<=": if (leftDomainDate.isBefore(rightDomainDate) || leftDomainDate.isEqual(rightDomainDate)) anyConsistent = true; break;
+                    }
+                    
+                    
+                }
+                if(!anyConsistent) toRemove.add(leftDomainDate);
+            }
+
+            for(int i = 0; i < toRemove.size(); i++) {
+                meetingLeft.domain.remove(toRemove.get(i));
+            }
+            /*
+            System.out.print("Left Domain After: [");
+            
+            for(LocalDate leftDomainDate: meetingLeft.domain) {
+                System.out.print(leftDomainDate.toString() + " , ");
+            }
+            System.out.println("]");
+            */
         }
-        */
+        
     }
     
     public static boolean isConstraintConsistent(int meetingId, List<LocalDate> solution, Set<DateConstraint> constraints) {
