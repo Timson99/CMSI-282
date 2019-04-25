@@ -1,8 +1,9 @@
 //package csp;
 
 import java.time.LocalDate;
-import java.util.Set;
-import java.util.List;
+import java.util.*;
+import java.util.List.*;
+import java.time.temporal.ChronoUnit;
 
 /**
  * CSP: Calendar Satisfaction Problem Solver
@@ -24,7 +25,106 @@ public class CSP {
      *         indexed by the variable they satisfy, or null if no solution exists.
      */
     public static List<LocalDate> solve (int nMeetings, LocalDate rangeStart, LocalDate rangeEnd, Set<DateConstraint> constraints) {
+        
+        ArrayList<LocalDate> solution = new ArrayList<LocalDate>();
+        ArrayList<MeetingVar> meetingList = new ArrayList<MeetingVar>(); 
+        
+        for(int i = 0; i < nMeetings; i++) {
+            
+            meetingList.add(new CSP().new MeetingVar( rangeStart, rangeEnd ) );
+            solution.add(null);
+        }
+        
+        
+        
         throw new UnsupportedOperationException();
+        
+        return backtracking(solution, meetingList, constraints);
     }
     
+    public static ArrayList<LocalDate> backtracking(List<LocalDate> solution, List<MeetingVar> meetingList, Set<DateConstraint> constraints) {
+        
+        boolean noneNull = true;
+        int indexOfUnassigned = -1;
+        for(int i = 0; i < solution.size(); i++) {
+            if( solution.get(i) == null) {
+                indexOfUnassigned = i;
+                noneNull = false;
+                break;
+            }
+        }
+        
+        if(noneNull == true) {
+            return solution;
+        }
+        else {
+            
+           MeetingVar unassignedMeeting = meetingList.get(indexOfUnassigned); 
+           int meetingId = indexOfUnassigned;
+           
+           for(LocalDate date: unassignedMeeting.domain) { //For each domain value that meeting could be set to
+               
+               solution.get(meetingId) = date; //Possible State
+               if( isConstraintConsistent(meetingId, solution, constraints) ) {
+                   
+                   List<LocalDate> result = backtracking(new List<LocalDate>(solution), new List<MeetingVar>(meetingList), constraints);
+                   
+                   if(result != null) {
+                       
+                       return result;
+                   }
+                   
+               }
+               solution.get(meetingId) = null;
+           }
+           return null;
+        }
+    }
+    
+    public static boolean isConstraintConsistent(int meetingId, List<LocalDate> solution, Set<DateConstraint> constraints) {
+        return false;
+    }
+
+    /*
+      * Data Type of Variable that holds a domain of possible dates of a meeting
+      * A meeting var can also be assigned a meeting time to e cross checked against other meeting
+      */
+    public class MeetingVar {
+        
+        
+        private HashSet<LocalDate> domain;
+        
+        /*
+          *  Converts range of dats from specification into a domain set of dates
+          * 
+          */
+        public MeetingVar(LocalDate rangeStart, LocalDate rangeEnd) {
+            
+            domain = new HashSet<LocalDate>();
+            
+            long daysInRange = ChronoUnit.DAYS.between(rangeStart,rangeEnd) + 1;
+
+            for(int i = 0; i < daysInRange; i++) {
+                domain.add( rangeStart.plusDays(i) );
+            }
+            
+            /*for(LocalDate ld : domain) {
+                System.out.println("Date:" + ld.toString());
+              }*/
+            
+        }
+        
+        
+        
+        /*
+          for (Iterator<Integer> i = set.iterator(); i.hasNext();) {
+            Integer element = i.next();
+            if (element % 2 == 0) {
+                i.remove();
+            }
+            }
+          */
+    }
+   
 }
+
