@@ -65,9 +65,11 @@ public class CSP {
            for(LocalDate date: unassignedMeeting.domain) { //For each domain value that meeting could be set to
                
                solution.set(meetingId,date); //Possible State
+               //System.out.println( isConstraintConsistent(meetingId, solution, constraints));
                if( isConstraintConsistent(meetingId, solution, constraints) ) {
                    
                    List<LocalDate> result = backtracking(new ArrayList<LocalDate>(solution), new ArrayList<MeetingVar>(meetingList), constraints);
+                   
                    
                    if(result != null) {
                        
@@ -86,25 +88,35 @@ public class CSP {
         for(DateConstraint constraint : constraints) {
         
             LocalDate leftDate = getLocalDate(constraint.L_VAL,solution);
-            LocalDate rightDate;
+            LocalDate rightDate = null;
             if(constraint.arity() == 1)
                 rightDate = ( (UnaryDateConstraint) constraint).R_VAL;
             else if(constraint.arity() == 2)
                 rightDate = getLocalDate( ( (BinaryDateConstraint) constraint).R_VAL , solution);
             
-            
-            if(leftDate == null || rightDate == null || leftDate != getLocalDate(meetingId,solution) || rightDate != getLocalDate(meetingId,solution)) {
+            if(constraint.arity() == 2 && (leftDate == null || rightDate == null)) {
                 continue;
+            }
+            
+            System.out.println(!leftDate.isEqual(getLocalDate(meetingId,solution)) || !rightDate.isEqual(getLocalDate(meetingId,solution)));
+            
+            if(!leftDate.isEqual(getLocalDate(meetingId,solution)) || !rightDate.isEqual(getLocalDate(meetingId,solution))) {
+                //continue;
             }
             
             boolean pass = false;
             
+            System.out.println("Left Date: " + leftDate.toString());
+            System.out.println("Right Date: " + rightDate.toString());
+            System.out.println("Passed?: " + pass);
             //Use get local dtae function
             
             
             switch(constraint.OP) {
+                
                 case "==": 
                     pass = leftDate.equals(rightDate);
+                   
                     break;
                 case "!=":
                     pass = !leftDate.equals(rightDate);
