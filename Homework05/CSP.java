@@ -82,7 +82,73 @@ public class CSP {
     }
     
     public static boolean isConstraintConsistent(int meetingId, List<LocalDate> solution, Set<DateConstraint> constraints) {
-        return false;
+        
+        for(DateConstraint constraint : constraints) {
+        
+            if(constraint.L_VAL != meetingId) {
+                continue;
+            }
+            
+            boolean pass = false;
+            
+            switch(constraint.OP) {
+                case "==": 
+                
+                    if(constraint.arity() == 2)
+                        pass = solution.get(meetingId).isEqual( solution.get(((BinaryDateConstraint) constraint).R_VAL) );
+                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
+                        pass = solution.get(meetingId).isEqual( ((UnaryDateConstraint) constraint).R_VAL);
+                   
+                    break;
+                case "!=":
+                
+                    if(constraint.arity() == 2)
+                        pass = !solution.get(meetingId).isEqual( solution.get(((BinaryDateConstraint) constraint).R_VAL) );
+                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
+                        pass = !solution.get(meetingId).isEqual( ((UnaryDateConstraint) constraint).R_VAL);
+                    
+                    break;
+                case "<":
+                
+                    if(constraint.arity() == 2)
+                        pass = solution.get(meetingId).compareTo( solution.get(((BinaryDateConstraint) constraint).R_VAL) ) < 0;
+                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
+                        pass = solution.get(meetingId).compareTo( ((UnaryDateConstraint) constraint).R_VAL) < 0;
+                
+                    break;
+                case "<=":
+                
+                    if(constraint.arity() == 2)
+                        pass = solution.get(meetingId).compareTo( solution.get(((BinaryDateConstraint) constraint).R_VAL) ) <= 0;
+                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
+                        pass = solution.get(meetingId).compareTo( ((UnaryDateConstraint) constraint).R_VAL) <= 0;
+                
+                    break;
+                case ">":
+                
+                    if(constraint.arity() == 2)
+                        pass = solution.get(meetingId).compareTo( solution.get(((BinaryDateConstraint) constraint).R_VAL) ) > 0;
+                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
+                        pass = solution.get(meetingId).compareTo( ((UnaryDateConstraint) constraint).R_VAL) > 0;
+                
+                    break;
+                case ">=":
+                
+                    if(constraint.arity() == 2)
+                        pass = solution.get(meetingId).compareTo( solution.get(((BinaryDateConstraint) constraint).R_VAL) ) >= 0  ;
+                    else if( ((UnaryDateConstraint) constraint).R_VAL != null)  
+                        pass = solution.get(meetingId).compareTo( ((UnaryDateConstraint) constraint).R_VAL) >= 0  ;
+                    
+                    break;
+                default:
+                    throw new IllegalArgumentException("OP Not Defined");
+            }
+            
+            if(!pass) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /*
