@@ -94,21 +94,18 @@ public class CSP {
             else if(constraint.arity() == 2)
                 rightDate = getLocalDate( ( (BinaryDateConstraint) constraint).R_VAL , solution);
             
-            if(constraint.arity() == 2 && (leftDate == null || rightDate == null)) {
+            if(leftDate == null || rightDate == null) {
                 continue;
-            }
-            
-            System.out.println(!leftDate.isEqual(getLocalDate(meetingId,solution)) || !rightDate.isEqual(getLocalDate(meetingId,solution)));
-            
-            if(!leftDate.isEqual(getLocalDate(meetingId,solution)) || !rightDate.isEqual(getLocalDate(meetingId,solution))) {
-                //continue;
+            }          
+            if(!leftDate.isEqual(getLocalDate(meetingId,solution)) && !rightDate.isEqual(getLocalDate(meetingId,solution))) {
+                continue;
             }
             
             boolean pass = false;
             
-            System.out.println("Left Date: " + leftDate.toString());
-            System.out.println("Right Date: " + rightDate.toString());
-            System.out.println("Passed?: " + pass);
+            //System.out.println("Left Date: " + leftDate.toString());
+            //System.out.println("Right Date: " + rightDate.toString());
+            //System.out.println("Passed?: " + pass);
             //Use get local dtae function
             
             
