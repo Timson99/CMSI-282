@@ -37,12 +37,12 @@ public class CSP {
         
         
         
-        throw new UnsupportedOperationException();
+        //throw new UnsupportedOperationException();
         
         return backtracking(solution, meetingList, constraints);
     }
     
-    public static ArrayList<LocalDate> backtracking(List<LocalDate> solution, List<MeetingVar> meetingList, Set<DateConstraint> constraints) {
+    public static List<LocalDate> backtracking(List<LocalDate> solution, List<MeetingVar> meetingList, Set<DateConstraint> constraints) {
         
         boolean noneNull = true;
         int indexOfUnassigned = -1;
@@ -64,10 +64,10 @@ public class CSP {
            
            for(LocalDate date: unassignedMeeting.domain) { //For each domain value that meeting could be set to
                
-               solution.get(meetingId) = date; //Possible State
+               solution.set(meetingId,date); //Possible State
                if( isConstraintConsistent(meetingId, solution, constraints) ) {
                    
-                   List<LocalDate> result = backtracking(new List<LocalDate>(solution), new List<MeetingVar>(meetingList), constraints);
+                   List<LocalDate> result = backtracking(new ArrayList<LocalDate>(solution), new ArrayList<MeetingVar>(meetingList), constraints);
                    
                    if(result != null) {
                        
@@ -75,7 +75,7 @@ public class CSP {
                    }
                    
                }
-               solution.get(meetingId) = null;
+               solution.set(meetingId, null);
            }
            return null;
         }
