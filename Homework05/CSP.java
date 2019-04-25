@@ -37,7 +37,7 @@ public class CSP {
         
         
         
-        //throw new UnsupportedOperationException();
+        nodeConsistency(meetingList, constraints);
         
         return backtracking(solution, meetingList, constraints);
     }
@@ -81,6 +81,44 @@ public class CSP {
            }
            return null;
         }
+    }
+    
+    
+    public static void nodeConsistency(List<MeetingVar> meetingList, Set<DateConstraint> constraints) {
+        
+        for(DateConstraint constraint : constraints) {
+            
+            if(constraint.arity() == 2) {
+                continue;
+            }
+            
+            ArrayList<LocalDate> toRemove = new ArrayList<LocalDate>();
+            MeetingVar meeting = meetingList.get(constraint.L_VAL);
+            LocalDate rightDate = ( (UnaryDateConstraint) constraint).R_VAL;
+            
+            for(LocalDate domainDate: meeting.domain) 
+            
+            
+                switch (constraint.OP) {
+                case "==": if (!domainDate.isEqual(rightDate))  toRemove.add(domainDate); break;
+                case "!=": if (domainDate.isEqual(rightDate)) toRemove.add(domainDate); break;
+                case ">":  if (domainDate.isBefore(rightDate) || domainDate.isEqual(rightDate))  toRemove.add(domainDate); break;
+                case "<":  if (domainDate.isAfter(rightDate) ||  domainDate.isEqual(rightDate)) toRemove.add(domainDate); break;
+                case ">=": if (domainDate.isBefore(rightDate)) toRemove.add(domainDate); break;
+                case "<=": if (domainDate.isAfter(rightDate))  toRemove.add(domainDate); break;
+            }
+            
+            System.out.println("Before: " + meeting.domain.size());
+            
+            for(int i = 0; i < toRemove.size(); i++) {
+                meeting.domain.remove(toRemove.get(i));
+            }
+            
+            System.out.println("After: " + meeting.domain.size());
+            
+            
+        }
+
     }
     
     public static boolean isConstraintConsistent(int meetingId, List<LocalDate> solution, Set<DateConstraint> constraints) {
@@ -132,8 +170,8 @@ public class CSP {
                     throw new IllegalArgumentException("OP Not Defined");
             }
             
-            System.out.println(leftDate.toString() + " " + constraint.OP + " " + rightDate.toString());
-            System.out.println("Passed?: " + pass);
+            //System.out.println(leftDate.toString() + " " + constraint.OP + " " + rightDate.toString());
+            //System.out.println("Passed?: " + pass);
             
             if(!pass) {
                 return false;
