@@ -103,9 +103,7 @@ public class CSP {
             
             boolean pass = false;
             
-            //System.out.println("Left Date: " + leftDate.toString());
-            //System.out.println("Right Date: " + rightDate.toString());
-            //System.out.println("Passed?: " + pass);
+            
             //Use get local dtae function
             
             
@@ -133,6 +131,9 @@ public class CSP {
                 default:
                     throw new IllegalArgumentException("OP Not Defined");
             }
+            
+            System.out.println(leftDate.toString() + " " + constraint.OP + " " + rightDate.toString());
+            System.out.println("Passed?: " + pass);
             
             if(!pass) {
                 return false;
