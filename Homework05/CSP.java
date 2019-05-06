@@ -12,6 +12,9 @@ import java.time.temporal.ChronoUnit;
  * on the dates of each meeting.
  */
 public class CSP {
+    
+    public static int counter1 = 0;
+    public static int counter2 = 0;
 
     /**
      * Public interface for the CSP solver in which the number of meetings,
@@ -25,7 +28,8 @@ public class CSP {
      *         indexed by the variable they satisfy, or null if no solution exists.
      */
     public static List<LocalDate> solve (int nMeetings, LocalDate rangeStart, LocalDate rangeEnd, Set<DateConstraint> constraints) {
-        
+        counter1 = 0;
+        counter2 = 0;
         //System.out.println("\n\n\nBEGINNING SOLVE PROCEDURE\n\n\n");
 
         ArrayList<LocalDate> solution = new ArrayList<LocalDate>();
@@ -47,11 +51,13 @@ public class CSP {
             System.out.print("]\n");
         }
         //*/
-        
+        System.out.println("Values in all "+ nMeetings + " domains: " + (ChronoUnit.DAYS.between(rangeStart,rangeEnd) * nMeetings));
         nodeConsistency(meetingList, constraints);
+        System.out.println("Node Consistency Pruned this many values: " + counter1);
         arcConsistency(meetingList, constraints);
-        
-        /*
+        System.out.println("Arc Consistency Pruned this many values: " + counter2);
+        System.out.println("Total Pruned: " + (counter1 + counter2) + "/" + (ChronoUnit.DAYS.between(rangeStart,rangeEnd) * nMeetings) + "\n");
+       /*
         for(int i = 0; i < nMeetings; i++) {  
             System.out.print("\n " + i + ": \n[");        
             for(LocalDate date : meetingList.get(i).domain) {
@@ -122,6 +128,7 @@ public class CSP {
             
             for(int i = 0; i < toRemove.size(); i++) {
                 meeting.domain.remove(toRemove.get(i));
+                counter1++;
             }
         }
     }
@@ -167,6 +174,7 @@ public class CSP {
             
             for(int i = 0; i < toRemove.size(); i++) {
                 meetingRight.domain.remove(toRemove.get(i));
+                counter2++;
             }
             /*
             System.out.print("Right Domain After: [");
@@ -212,6 +220,7 @@ public class CSP {
 
             for(int i = 0; i < toRemove.size(); i++) {
                 meetingLeft.domain.remove(toRemove.get(i));
+                counter2++;
             }
            /*
             System.out.print("Left Domain After: [");
@@ -225,7 +234,7 @@ public class CSP {
     }
     
     public static boolean checkConstraint(LocalDate leftDate, LocalDate rightDate, String OP) {
-        
+        //System.out.print(" " + (++counter) +" ");
         switch (OP) {
             case "==": if (leftDate.isEqual(rightDate))  { return true; } break;
             case "!=": if (!leftDate.isEqual(rightDate)) { return true; } break;
